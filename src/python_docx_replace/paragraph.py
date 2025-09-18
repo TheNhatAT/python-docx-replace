@@ -20,12 +20,12 @@ class Paragraph:
     def _get_paragraphs(item: Any) -> Any:
         yield from item.paragraphs
 
-        # get paragraphs from tables
+        # get paragraphs from tables (including nested tables)
         for table in item.tables:
             for row in table.rows:
                 for cell in row.cells:
-                    for paragraph in cell.paragraphs:
-                        yield paragraph
+                    # Recursively get paragraphs from the cell (handles nested tables)
+                    yield from Paragraph._get_paragraphs(cell)
 
     def __init__(self, p) -> None:
         self.p = p
